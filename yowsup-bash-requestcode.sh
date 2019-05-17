@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Should run the following line (using example data):
+# python yowsup-cli registration --requestcode sms --config-phone 46766921516 --config-cc 46 --config-mcc 240 --config-mnc 01
+
 default_phone_number=46766921516
 default_cc_number=46
 default_mcc_number=240
