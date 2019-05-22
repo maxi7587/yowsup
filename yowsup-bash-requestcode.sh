@@ -31,7 +31,7 @@ echo "- mcc $mcc_number"
 echo "- mnc $mnc_number"
 echo "- number $phone_number"
 
-#yowsup-cli registration --requestcode sms --config-phone $phone_number --config-cc $cc_number --config-mcc $mcc_number --config-mnc $mnc_number
+yowsup-cli registration --requestcode sms --config-phone $phone_number --config-cc $cc_number --config-mcc $mcc_number --config-mnc $mnc_number
 
 echo -n "Enter the verification code: "
 read verification_code

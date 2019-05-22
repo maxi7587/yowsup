@@ -23,20 +23,18 @@ I 2019-05-22 01:16:39,373 yowsup.common.http.warequest -
 
 {
     "__version__": 1,
-        "cc": "54",
-            "client_static_keypair":
-            "6Dy3tJ0nuWmu1+FQpoqzC2LX2GtF/seKNFJz8jKcNGeA3QiLQa7YsiJIgcg05Smw/gcsQzJuBkz6X83JxuO/DA==",
-                "expid": "mnHgpAdFSBea6kNtTn9YYQ==",
-                    "fdid": "78f510e9-c76a-4f9f-b714-815917300bad",
-                        "id": "l3tTa87hIlidnpd7j7NKALMUTgg=",
-                            "mcc": "722",
-                                "mnc": "320",
-                                    "phone": "542604268467",
-                                        "sim_mcc": "000",
-                                            "sim_mnc": "000"
-                                            }
-                                            status: ok
-                                            edge_routing_info: CAUIAg==
-                                            login: 5492604268467
-                                            type: new
-
+    "cc": "54",
+    "client_static_keypair": "6Dy3tJ0nuWmu1+FQpoqzC2LX2GtF/seKNFJz8jKcNGeA3QiLQa7YsiJIgcg05Smw/gcsQzJuBkz6X83JxuO/DA==",
+    "expid": "mnHgpAdFSBea6kNtTn9YYQ==",
+    "fdid": "78f510e9-c76a-4f9f-b714-815917300bad",
+    "id": "l3tTa87hIlidnpd7j7NKALMUTgg=",
+    "mcc": "722",
+    "mnc": "320",
+    "phone": "542604268467",
+    "sim_mcc": "000",
+    "sim_mnc": "000"
+}
+status: "ok"
+edge_routing_info: "CAUIAg=="
+login: "5492604268467"
+type: "new"
