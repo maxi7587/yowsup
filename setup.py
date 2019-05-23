@@ -5,24 +5,7 @@ import yowsup
 import platform
 import sys
 
-deps = [
-    'appdirs==1.4.3',
-    'asn1crypto==0.24.0',
-    'certifi==2019.3.9',
-    'cffi==1.12.3',
-    'cryptography==2.6.1',
-    'dissononce==0.34.3',
-    'enum34==1.1.6',
-    'ipaddress==1.0.22',
-    'protobuf==3.7.1',
-    'pycparser==2.19',
-    'python-axolotl-curve25519==0.4.1.post2',
-    'six==1.10.0',
-    'transitions==0.6.9',
-    'consonance==0.1.2',
-    'argparse',
-    'python-axolotl==0.2.2'
-]
+deps = ['consonance==0.1.3-1', 'argparse', 'python-axolotl==0.2.2', 'six==1.10', 'appdirs', 'protobuf>=3.6.0']
 
 if sys.version_info < (2, 7):
     deps.append('importlib')
