@@ -37,13 +37,10 @@ class YowsupEchoStack(object):
         self._stack.setProp(key, val)
 
     @threaded
-    def start(self, killer_event):
+    def start(self):
         print('inside start begin')
-        if not killer_event.wait(1):
-            print('no killer event!')
-            self._stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
-            self._stack.loop()
-        print('process killed!')
+        self._stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
+        self._stack.loop()
 
 
 def startEcho():
@@ -56,13 +53,12 @@ def startEcho():
     # _layer_network_dispatcher = None
     # from yowsup.demos import echoclient
 
-    echo_thread_killer = threading.Event()
     try:
         print('starting stack')
         stack = YowsupEchoStack(_profile)
         # if _layer_network_dispatcher is not None:
         #     stack.set_prop(YowNetworkLayer.PROP_DISPATCHER, _layer_network_dispatcher)
-        echo_thread = threading.Thread(target=stack.start, args=(echo_thread_killer,))
+        echo_thread = threading.Thread(target=stack.start)
         echo_thread.start()
 
         print(echo_thread.is_alive())
@@ -80,7 +76,6 @@ def startEcho():
                 pass #Gets thrown when we interrupt the join
             except KeyboardInterrupt:
                 print("\nYowsdown")
-                echo_thread_killer.set()
                 sys.exit(0)
         # print('--------------------------------------')
         # print(stack._stack.__dict__)
