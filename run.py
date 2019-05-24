@@ -8,6 +8,8 @@ import sys
 import json
 import threading
 
+
+# NOTE: decorator used to thread methods
 def threaded(fn):
     def wrapper(*args, **kwargs):
         thread = threading.Thread(target=fn, args=args, kwargs=kwargs)
@@ -16,11 +18,9 @@ def threaded(fn):
         return thread
     return wrapper
 
-# class YowsupEchoStack(threading.Thread):
+
 class YowsupEchoStack(object):
     def __init__(self, profile):
-        # threading.Thread.__init__(self)
-
         stackBuilder = YowStackBuilder()
 
         # TODO: checkif instantiation works, else return to old way
