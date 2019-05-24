@@ -184,16 +184,13 @@ class YowStack(object):
             self.__stackInstances[0].emitEvent(yowLayerEvent)
 
     def broadcastEvent(self, yowLayerEvent):
-        print('broadcastEvent 1')
         if not self.__stackInstances[-1].onEvent(yowLayerEvent):
-            print('broadcastEvent 2')
             self.__stackInstances[-1].broadcastEvent(yowLayerEvent)
 
     def execDetached(self, fn):
         self.__class__.__detachedQueue.put(fn)
 
     def loop(self, *args, **kwargs):
-        print('inside loop')
         while True:
             try:
                 callback = self.__class__.__detachedQueue.get(False) #doesn't block
