@@ -5,6 +5,7 @@ from yowsup.layers.network import YowNetworkLayer
 from yowsup.config.manager import ConfigManager
 from yowsup.profile.profile import YowProfile
 import sys
+import json
 
 class YowsupEchoStack(object):
     def __init__(self, profile):
@@ -27,12 +28,15 @@ class YowsupEchoStack(object):
 
 def startEcho():
     config_manager = ConfigManager()
-    _config_phone = "542604268467"
-    _config = config_manager.load(_config_phone)
+    _config_phone = '542604268467'
+    # TODO: if everything works fine, remoce following commented line
+    # _config = config_manager.load(_config_phone)
+    _config = config_manager.load_path('config/542604268467.json')
     _profile = YowProfile(_config_phone, _config)
     _layer_network_dispatcher = None
     from yowsup.demos import echoclient
     try:
+        print('starting stack')
         stack = YowsupEchoStack(_profile)
         if _layer_network_dispatcher is not None:
             stack.set_prop(YowNetworkLayer.PROP_DISPATCHER, _layer_network_dispatcher)
