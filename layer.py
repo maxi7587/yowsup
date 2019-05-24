@@ -6,10 +6,9 @@ from yowsup.layers.protocol_acks.protocolentities      import OutgoingAckProtoco
 
 class EchoLayer(YowInterfaceLayer):
 
-    # send_text_message(origin, target, body):
-    send_text_message(self, target, body):
+    def sendTextMessage(self, target, body):
         print('send message')
-        outgoingMessageProtocolEntity = TextMessageProtocolEntity( body, target)
+        outgoingMessageProtocolEntity = TextMessageProtocolEntity(body, target)
         self.toLower(outgoingMessageProtocolEntity)
 
     @ProtocolEntityCallback("message")
