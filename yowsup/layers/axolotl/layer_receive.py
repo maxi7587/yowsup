@@ -79,6 +79,13 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
                 self.handleSenderKeyMessage(node)
         except (exceptions.InvalidMessageException, exceptions.InvalidKeyIdException) as e:
             logger.warning("InvalidMessage or KeyId for %s, going to send a retry", encMessageProtocolEntity.getAuthor(False))
+
+            # TODO: 3 lines added by Maxi
+            from yowsup.layers.axolotl.protocolentities.iq_key_get import GetKeysIqProtocolEntity
+            print('encMessageProtocolEntity.getAuthor(False)', encMessageProtocolEntity.getAuthor(False))
+            entity = GetKeysIqProtocolEntity([encMessageProtocolEntity.getAuthor(False)])
+            logger.info("[prime] Trying getKeys for %s getting keys now", encMessageProtocolEntity.getAuthor(False))
+
             retry = RetryOutgoingReceiptProtocolEntity.fromMessageNode(node, self.manager.registration_id)
             self.toLower(retry.toProtocolTreeNode())
         except exceptions.NoSessionException:
@@ -192,5 +199,3 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             participantid=participantId,
             skmsgdata=senderKeyDistributionMessage.axolotl_sender_key_distribution_message
         )
-
-
