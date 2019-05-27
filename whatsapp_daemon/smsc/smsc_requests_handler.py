@@ -40,3 +40,11 @@ class SMSCRequestsHandler(object):
         url = self.api_url + "/whatsapp/%s/messages" %(str(phone_number))
         raw_sent_message = requests.patch(url, message.__dict__, headers=self.headers)
         # TODO: return confiramtion code of the request status and add to method documentation
+
+    def getNumberConfig(self, number):
+        # TODO: check the posiibility to store axolotl.db file in a server to avoid "IcorrectMessage or KeyId ERROR in Yowsup" when using in other PC
+        url = self.api_url + "/whatsapp/%s/config" %(str(phone_number))
+        raw_config = requests.get(url, headers=self.headers)
+        config_json = raw_config.json()
+        print('config_json: ', config_json)
+        # TODO: return configuration for the passed number and add to method documentation

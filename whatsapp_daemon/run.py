@@ -67,6 +67,7 @@ def startDaemon():
                 import time
                 time.sleep(3)
                 print(threading.enumerate())
+                stack.whatsapp_daemon_layer.sendTextMessage('5492604332205', 'Hola Maxi')
                 # whatsapp_daemon_thread.stop()
             except IOError:
                 print('\nIOERror')

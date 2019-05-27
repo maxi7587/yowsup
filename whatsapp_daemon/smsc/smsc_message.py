@@ -1,12 +1,17 @@
 class SMSCMessage(object):
     """SMSC Message implementation.
-    Init args:
-    phone_number_from (str): the number that is sending the message
-    phone_number_to (str): the number that will recieve the messge
-    message (str): the message to be sent
-    timestamp (number): tiemstamp of the last status update
-    status (str): message status ('sent', 'unsent', 'failed', 'recieved')
-    status_details (str): used to store details regarding the message's status
+    :param phone_number_from: the number that is sending the message
+    :type phone_number_from: str
+    :phone_number_to: the number that will recieve the messge
+    :type phone_number_to: str
+    :message: the message to be sent
+    :type messge: str
+    :timestamp: tiemstamp of the last status update
+    :type timestamp: number
+    :status: message status ('sent', 'unsent', 'failed', 'recieved')
+    :type status: str
+    :status_details: used to store details regarding the message's status
+    :type status_details: str
     """
 
     def __init__(self, phone_number_from, phone_number_to, message, timestamp, status, status_details):

@@ -3,14 +3,30 @@ from yowsup.layers.protocol_messages.protocolentities  import TextMessageProtoco
 from yowsup.layers.protocol_receipts.protocolentities  import OutgoingReceiptProtocolEntity
 from yowsup.layers.protocol_acks.protocolentities      import OutgoingAckProtocolEntity
 from whatsapp_daemon.smsc                              import SMSCMessage
+from yowsup.common.tools import Jid
 
 
 class WhatsappDaemonLayer(YowInterfaceLayer):
 
-    def sendTextMessage(self, target, body):
-        print('send message')
-        outgoingMessageProtocolEntity = TextMessageProtocolEntity(body, target)
-        self.toLower(outgoingMessageProtocolEntity)
+    def sendTextMessage(self, number, content):
+        if self.assertConnected():
+            outgoingMessage = TextMessageProtocolEntity(content, to=self.aliasToJid(number))
+            self.toLower(outgoingMessage)
+
+    def assertConnected(self):
+        if self.connected:
+            return True
+        else:
+            print('ERROR: NOT CONNECTED')
+            # TODO: when smsc API is ready, set message as failed adn save to API
+            return False
+
+    def aliasToJid(self, calias):
+        return Jid.normalize(calias)
+
+    @ProtocolEntityCallback("success")
+    def onSuccess(self, entity):
+        self.connected = True
 
     @ProtocolEntityCallback("message")
     def onMessage(self, messageProtocolEntity):
@@ -39,21 +55,21 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
         elif messageProtocolEntity.getType() == 'media':
             self.onMediaMessage(messageProtocolEntity)
 
+        # TODO: actually, the app is making ECHO to check that it works, when everything works fine, comment the following line to disable ECHO
         self.toLower(messageProtocolEntity.forward(messageProtocolEntity.getFrom()))
         self.toLower(messageProtocolEntity.ack())
         self.toLower(messageProtocolEntity.ack(True))
 
-
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
-        print('receipt onReceipt entity type', entity.getType())
-        print('receipt onReceipt entity', entity.__dict__)
         self.toLower(entity.ack())
 
+    # NOTE: following method is just to check ECHO works
     def onTextMessage(self,messageProtocolEntity):
         # just print info
         print("Echoing %s to %s" % (messageProtocolEntity.getBody(), messageProtocolEntity.getFrom(False)))
 
+    # NOTE: following method is just to check ECHO works
     def onMediaMessage(self, messageProtocolEntity):
         print('recieved media')
         # just print info
