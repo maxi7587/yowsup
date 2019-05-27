@@ -46,16 +46,17 @@ class YowsupDaemonStack(object):
 def startDaemon():
     config_manager = ConfigManager()
     # TODO: when @pablorsk implements whatsapp in smsc API, instantiate SMSCRequestsHandler and get messages to send from API
+    # TODO: when @pablorsk implements whatsapp in smsc API, get numbers and config from API
     # TODO: add support for multiple numbers
     _config_phone = '542604268467'
     _config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
     _profile = YowProfile(_config_phone, _config)
+    # NOTE: do not remove following line with no reason (tgalal added it to his demos)
     # _layer_network_dispatcher = None
-    # from yowsup.demos import whatsapp_daemonclient
 
     try:
-        print('starting stack')
         stack = YowsupDaemonStack(_profile)
+        # NOTE: do not remove following 2 lines with no reason (tgalal addedthem to his demos)
         # if _layer_network_dispatcher is not None:
         #     stack.set_prop(YowNetworkLayer.PROP_DISPATCHER, _layer_network_dispatcher)
         whatsapp_daemon_thread = threading.Thread(target=stack.start)
@@ -67,14 +68,10 @@ def startDaemon():
                 import time
                 time.sleep(3)
                 print(threading.enumerate())
-                stack.whatsapp_daemon_layer.sendTextMessage('5492604332205', 'Hola Maxi')
-                # whatsapp_daemon_thread.stop()
+                # stack.whatsapp_daemon_layer.sendTextMessage('5492604332205', 'Hola Maxi')
             except IOError:
                 print('\nIOERror')
                 pass #Gets thrown when we interrupt the join
-            # except KeyboardInterrupt:
-            #     print("\nYowsdown")
-            #     sys.exit(0)
     except KeyboardInterrupt:
         print("\nYowsdown")
         sys.exit(0)
