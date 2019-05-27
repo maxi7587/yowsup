@@ -2,9 +2,10 @@ from yowsup.layers.interface                           import YowInterfaceLayer,
 from yowsup.layers.protocol_messages.protocolentities  import TextMessageProtocolEntity
 from yowsup.layers.protocol_receipts.protocolentities  import OutgoingReceiptProtocolEntity
 from yowsup.layers.protocol_acks.protocolentities      import OutgoingAckProtocolEntity
+from whatsapp_daemon.smsc                              import SMSCMessage
 
 
-class EchoLayer(YowInterfaceLayer):
+class WhatsappDaemonLayer(YowInterfaceLayer):
 
     def sendTextMessage(self, target, body):
         print('send message')
@@ -25,12 +26,23 @@ class EchoLayer(YowInterfaceLayer):
                 stack = self.getStack()
                 profile = stack.getProp('profile')
                 username = profile.username
-                f.write(str('--- new message ---\n'))
-                f.write(str(message_time) + '\n')
-                f.write(str(message_body) + '\n')
-                f.write(str(message_from) + '\n')
-                f.write(str(username) + '\n')
-                f.write(str('-------------------\n'))
+                smsc_message = SMSCMessage(
+                    message_from,
+                    username,
+                    message_body,
+                    message_time,
+                    'recieved',
+                    ''
+                )
+
+                print('smsc_message ---> ', smsc_message.__dict__)
+
+                # f.write(str('--- new message ---\n'))
+                # f.write(str(smsc_message.timestamp) + '\n')
+                # f.write(str(smsc_message.message) + '\n')
+                # f.write(str(smsc_message.from_number) + '\n')
+                # f.write(str(smsc_message.to_number) + '\n')
+                # f.write(str('-------------------\n'))
 
         elif messageProtocolEntity.getType() == 'media':
             self.onMediaMessage(messageProtocolEntity)
@@ -42,6 +54,8 @@ class EchoLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
+        print('receipt onReceipt entity type', entity.getType())
+        print('receipt onReceipt entity', entity.__dict__)
         self.toLower(entity.ack())
 
     def onTextMessage(self,messageProtocolEntity):
@@ -49,6 +63,7 @@ class EchoLayer(YowInterfaceLayer):
         print("Echoing %s to %s" % (messageProtocolEntity.getBody(), messageProtocolEntity.getFrom(False)))
 
     def onMediaMessage(self, messageProtocolEntity):
+        print('recieved media')
         # just print info
         if messageProtocolEntity.media_type == "image":
             print("Echoing image %s to %s" % (messageProtocolEntity.url, messageProtocolEntity.getFrom(False)))

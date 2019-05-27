@@ -1,5 +1,5 @@
 from yowsup.stacks import  YowStackBuilder
-from layer import EchoLayer
+from layer import WhatsappDaemonLayer
 from yowsup.layers import YowLayerEvent
 from yowsup.layers.network import YowNetworkLayer
 from yowsup.config.manager import ConfigManager
@@ -19,16 +19,16 @@ def threaded(fn):
     return wrapper
 
 
-class YowsupEchoStack(object):
+class YowsupDaemonStack(object):
     def __init__(self, profile):
         stackBuilder = YowStackBuilder()
 
         # TODO: checkif instantiation works, else return to old way
-        self.echo_layer = EchoLayer()
+        self.whatsapp_daemon_layer = WhatsappDaemonLayer()
 
         self._stack = stackBuilder\
             .pushDefaultLayers()\
-            .push(self.echo_layer)\
+            .push(self.whatsapp_daemon_layer)\
             .build()
 
         self._stack.setProfile(profile)
@@ -43,34 +43,34 @@ class YowsupEchoStack(object):
         self._stack.loop()
 
 
-def startEcho():
+def startDaemon():
     config_manager = ConfigManager()
     _config_phone = '542604268467'
     # TODO: if everything works fine, remoce following commented line
     # _config = config_manager.load(_config_phone)
-    _config = config_manager.load_path('config/542604268467.json')
+    _config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
     _profile = YowProfile(_config_phone, _config)
     # _layer_network_dispatcher = None
-    # from yowsup.demos import echoclient
+    # from yowsup.demos import whatsapp_daemonclient
 
     try:
         print('starting stack')
-        stack = YowsupEchoStack(_profile)
+        stack = YowsupDaemonStack(_profile)
         # if _layer_network_dispatcher is not None:
         #     stack.set_prop(YowNetworkLayer.PROP_DISPATCHER, _layer_network_dispatcher)
-        echo_thread = threading.Thread(target=stack.start)
-        echo_thread.start()
+        whatsapp_daemon_thread = threading.Thread(target=stack.start)
+        whatsapp_daemon_thread.start()
 
-        print(echo_thread.is_alive())
+        print(whatsapp_daemon_thread.is_alive())
         while True:
             try:
                 print('main thread try')
-                # echo_thread.join(timeout = 0.1)
-                # echo_thread.join(4)
+                # whatsapp_daemon_thread.join(timeout = 0.1)
+                # whatsapp_daemon_thread.join(4)
                 import time
                 time.sleep(3)
                 print(threading.enumerate())
-                # echo_thread.stop()
+                # whatsapp_daemon_thread.stop()
             except IOError:
                 print('IOERror')
                 pass #Gets thrown when we interrupt the join
@@ -82,12 +82,11 @@ def startEcho():
         # print('--------------------------------------')
     except KeyboardInterrupt:
         print("\nYowsdown")
-        echo_thread_killer.set()
         sys.exit(0)
 
 
 if __name__==  "__main__":
-    startEcho()
+    startDaemon()
 
 
 # from threading import Thread;
