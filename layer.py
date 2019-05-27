@@ -18,19 +18,19 @@ class EchoLayer(YowInterfaceLayer):
             self.onTextMessage(messageProtocolEntity)
 
             # Save messages to file
-            with open('messages_recieved.txt', 'a+') as f:
-                message_time = str(messageProtocolEntity.getTimestamp())
-                message_body = messageProtocolEntity.getBody()
-                message_from = messageProtocolEntity.getFrom()
-                stack = self.getStack()
-                profile = stack.getProp('profile')
-                username = profile.username
-                f.write(str('--- new message ---\n'))
-                f.write(str(message_time) + '\n')
-                f.write(str(message_body) + '\n')
-                f.write(str(message_from) + '\n')
-                f.write(str(username) + '\n')
-                f.write(str('-------------------\n'))
+            # with open('messages_recieved.txt', 'a+') as f:
+            #     message_time = str(messageProtocolEntity.getTimestamp())
+            #     message_body = messageProtocolEntity.getBody()
+            #     message_from = messageProtocolEntity.getFrom()
+            #     stack = self.getStack()
+            #     profile = stack.getProp('profile')
+            #     username = profile.username
+            #     f.write(str('--- new message ---\n'))
+            #     f.write(str(message_time) + '\n')
+            #     f.write(str(message_body) + '\n')
+            #     f.write(str(message_from) + '\n')
+            #     f.write(str(username) + '\n')
+            #     f.write(str('-------------------\n'))
 
         elif messageProtocolEntity.getType() == 'media':
             self.onMediaMessage(messageProtocolEntity)
