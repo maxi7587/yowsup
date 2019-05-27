@@ -18,7 +18,7 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
             return True
         else:
             print('ERROR: NOT CONNECTED')
-            # TODO: when smsc API is ready, set message as failed adn save to API
+            # TODO: when smsc API is ready, set message as failed and save to API
             return False
 
     def aliasToJid(self, calias):
