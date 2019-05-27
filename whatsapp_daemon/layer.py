@@ -18,31 +18,23 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
         if messageProtocolEntity.getType() == 'text':
             self.onTextMessage(messageProtocolEntity)
 
-            # Save messages to file
-            with open('messages_recieved.txt', 'a+') as f:
-                message_time = str(messageProtocolEntity.getTimestamp())
-                message_body = messageProtocolEntity.getBody()
-                message_from = messageProtocolEntity.getFrom()
-                stack = self.getStack()
-                profile = stack.getProp('profile')
-                username = profile.username
-                smsc_message = SMSCMessage(
-                    message_from,
-                    username,
-                    message_body,
-                    message_time,
-                    'recieved',
-                    ''
-                )
+            message_time = str(messageProtocolEntity.getTimestamp())
+            message_body = messageProtocolEntity.getBody()
+            message_from = messageProtocolEntity.getFrom().split('@')[0]
+            stack = self.getStack()
+            profile = stack.getProp('profile')
+            username = profile.username
+            smsc_message = SMSCMessage(
+                message_from,
+                username,
+                message_body,
+                message_time,
+                'recieved',
+                ''
+            )
 
-                print('smsc_message ---> ', smsc_message.__dict__)
-
-                # f.write(str('--- new message ---\n'))
-                # f.write(str(smsc_message.timestamp) + '\n')
-                # f.write(str(smsc_message.message) + '\n')
-                # f.write(str(smsc_message.from_number) + '\n')
-                # f.write(str(smsc_message.to_number) + '\n')
-                # f.write(str('-------------------\n'))
+            print('smsc_message ---> ', smsc_message.__dict__)
+            # TODO: when @pablorsk implements whatsapp in smsc API, instantiate SMSCRequestsHandler and save sent messages
 
         elif messageProtocolEntity.getType() == 'media':
             self.onMediaMessage(messageProtocolEntity)
