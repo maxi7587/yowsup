@@ -28,6 +28,7 @@ class SMSCRequestsHandler(object):
         print('Request made. The response is:\n')
         print(raw_messages.status_code)
         print(messages_json)
+        # TODO: parse messages_json to populate a list of SMSCMessage instances
         # TODO: return unsent messages in a list and add to method documentation
 
     def saveSentMessage(self, message):

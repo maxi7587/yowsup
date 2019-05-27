@@ -1,9 +1,10 @@
 from invoke import task
+import os
 
 @task
-def requestcode(c, docs=False):
-    c.run('./whatsapp_daemon/yowsup-bash-requestcode.sh')
+def requestcode():
+    os.system('./whatsapp_daemon/yowsup-bash-requestcode.sh')
 
 @task
-def whatsapp_daemon(c, docs=False):
-    c.run('python ./whatsapp_daemon/run.py')
+def whatsapp_daemon():
+    os.system('python ./whatsapp_daemon/run.py')
