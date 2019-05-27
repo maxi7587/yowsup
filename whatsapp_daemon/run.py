@@ -45,7 +45,6 @@ class YowsupDaemonStack(object):
 
 def startDaemon():
     config_manager = ConfigManager()
-    # TODO: when @pablorsk implements whatsapp in smsc API, instantiate SMSCRequestsHandler and get messages to send from API
     # TODO: when @pablorsk implements whatsapp in smsc API, get numbers and config from API
     # TODO: add support for multiple numbers
     _config_phone = '542604268467'
@@ -67,7 +66,9 @@ def startDaemon():
             try:
                 import time
                 time.sleep(3)
+                # TODO: when @pablorsk implements whatsapp in smsc API, use this loop to instantiate SMSCRequestsHandler and get messages to send from API
                 print(threading.enumerate())
+                # TODO: remove following line, it's just for testing send method
                 # stack.whatsapp_daemon_layer.sendTextMessage('5492604332205', 'Hola Maxi')
             except IOError:
                 print('\nIOERror')
