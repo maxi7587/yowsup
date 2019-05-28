@@ -9,11 +9,16 @@ class SMSCRecievedMessage(SMSCClass):
     :type text: str
     """
 
+    # TODO: remove hardcoded relationship when bask end supports lines
     relationships = {
-        'line': {}
+        'line': {
+            'type': 'lines',
+            'id': '1'
+        }
     }
-    type = 'receipts'
+    type = 'received_messages'
 
+    # TODO: from is really to... tawk with @pablorsk
     def __init__(self, from_number, text):
         self.attributes['from'] = from_number
         self.attributes['text'] = text

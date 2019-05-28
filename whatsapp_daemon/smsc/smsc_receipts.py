@@ -9,7 +9,6 @@ class SMSCReceipt(SMSCClass):
     :type enviado: number
     """
 
-    attributes = {}
     relationships = {
         'message': {},
         'number': {}

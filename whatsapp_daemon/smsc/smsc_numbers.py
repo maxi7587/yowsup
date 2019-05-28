@@ -9,7 +9,6 @@ class SMSCNumber(SMSCClass):
     :type fijo: str
     """
 
-    attributes = {}
     type = 'numbers'
 
     def __init__(self, prefijo, fijo):

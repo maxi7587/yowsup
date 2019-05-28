@@ -10,8 +10,15 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
 
     def sendTextMessage(self, number, content):
         if self.assertConnected():
-            outgoingMessage = TextMessageProtocolEntity(content, to=self.aliasToJid(number))
-            self.toLower(outgoingMessage)
+            try:
+                outgoingMessage = TextMessageProtocolEntity(content, to=self.aliasToJid(number))
+                self.toLower(outgoingMessage)
+                return True
+            except Exception as e:
+                print('ERROR: Could not send message to %s' %(number))
+                return False
+        else:
+            return False
 
     def assertConnected(self):
         if self.connected:
@@ -62,6 +69,7 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
+        print('inside onReceipt method')
         self.toLower(entity.ack())
 
     # NOTE: following method is just to check ECHO works
@@ -71,7 +79,7 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
 
     # NOTE: following method is just to check ECHO works
     def onMediaMessage(self, messageProtocolEntity):
-        print('recieved media')
+        print('recieved media', messageProtocolEntity.__dict__)
         # just print info
         if messageProtocolEntity.media_type == "image":
             print("Echoing image %s to %s" % (messageProtocolEntity.url, messageProtocolEntity.getFrom(False)))

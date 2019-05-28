@@ -2,8 +2,9 @@ import requests
 import json
 import datetime
 import time
-from whatsapp_daemon.smsc import SMSCReceipt, SMSCNumber, SMSCMessage
-
+from whatsapp_daemon.smsc import SMSCReceipt, SMSCNumber, SMSCMessage, SMSCRecievedMessage
+from yowsup.config.manager import ConfigManager
+from yowsup.profile.profile import YowProfile
 
 class SMSCRequestsHandler(object):
     """Requests handler for SMSC API
@@ -17,6 +18,7 @@ class SMSCRequestsHandler(object):
         # 'Authorization': self.token,
         'content-type': 'application/json'
     }
+    internal_key = 'TBNiK0IsGYqDrbZiVCz1'
     busy = False
 
     def getUnsentReceipts(self):
@@ -26,8 +28,7 @@ class SMSCRequestsHandler(object):
             date = datetime.date.today()
             formatted_date = date.strftime("%Y/%m/%d")
             print(formatted_date, 'formatted_date')
-            internal_key = 'TBNiK0IsGYqDrbZiVCz1'
-            url = self.api_url + "/receipts?include=message,number&filter[enviado]=0&filter[message.method]=whatsapp&filter[message.fecha][until]=%s&internal_key=%s" %(str(formatted_date), str(internal_key))
+            url = self.api_url + "/receipts?include=message,number&filter[enviado]=0&filter[message.method]=whatsapp&filter[message.fecha][until]=%s&internal_key=%s" %(str(formatted_date), str(self.internal_key))
             raw_messages = requests.get(url, headers=self.headers)
             messages_json = raw_messages.json()
             print('Request made. The response is:\n')
@@ -76,14 +77,45 @@ class SMSCRequestsHandler(object):
             print(e)
             return []
 
-    def saveSentReceipt(self, message):
+    def saveSentReceipt(self, receipt):
         """Save a sent message to the API.
         Args:
         message (SMSCMessage): an instance of SMSCMessage to save to the API
         """
-        internal_key = 'TBNiK0IsGYqDrbZiVCz1'
-        url = self.api_url + "/received_messages?internal_key=%s" %(str(internal_key))
-        raw_sent_message = requests.patch(url, message.__dict__, headers=self.headers)
+        try:
+            success = True
+            receipt.attributes['enviado'] = 20
+            sent_receipt_url = self.api_url + "/receipts?internal_key=%s" %(str(self.internal_key))
+            raw_sent_receipt = requests.patch(sent_receipt_url, receipt.__dict__, headers=self.headers)
+            print(raw_sent_receipt.status_code)
+            if raw_sent_receipt.status_code == 200:
+                print('Updated sent receipt in SMSC!')
+            else:
+                success = False
+                print('ERROR: Failed to update sent receipt in SMSC!')
+
+            # TODO: get cc form API when it is suppported and add it tho the phone_number
+            cc = '549'
+            prefijo = receipt.relationships['number']['data'].attributes['prefijo']
+            fijo = receipt.relationships['number']['data'].attributes['fijo']
+            phone_number = "%s%s" %(prefijo, fijo)
+            message = receipt.relationships['message']['data'].attributes['text']
+            recieved_message = SMSCRecievedMessage(phone_number, message)
+            recieved_message_url = self.api_url + "/received_messages?internal_key=%s" %(str(self.internal_key))
+            raw_recieved_message = requests.post(recieved_message_url, recieved_message.__dict__, headers=self.headers)
+            print(raw_recieved_message.status_code)
+            if raw_recieved_message.status_code == 200:
+                print('Saved recieved message in SMSC!')
+            else:
+                success = False
+                print('ERROR: Failed to save recieved message in SMSC!')
+
+        except Exception as e:
+            success = False
+            print('ERROR: Could not update sent resources in SMSC')
+            print(e)
+
+        return success
         # TODO: return confiramtion code of the request status and add to method documentation
 
     def getNumberConfig(self, number):
@@ -93,3 +125,13 @@ class SMSCRequestsHandler(object):
         config_json = raw_config.json()
         print('config_json: ', config_json)
         # TODO: return configuration for the passed number and add to method documentation
+
+    def getLinesCollection(self):
+        config_manager = ConfigManager()
+        # TODO: get lines from SMSC API
+        phone_number = '542604268467'
+        config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
+        profiles_collection = {}
+        profiles_collection[phone_number] = YowProfile(phone_number, config)
+
+        return profiles_collection

@@ -13,7 +13,6 @@ class SMSCMessage(SMSCClass):
     :type priority: number
     """
 
-    attributes = {}
     type = 'messages'
 
     def __init__(self, date, fecha, text, method, priority):

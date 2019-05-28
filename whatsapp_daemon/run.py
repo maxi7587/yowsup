@@ -39,29 +39,49 @@ class YowsupDaemonStack(object):
     def set_prop(self, key, val):
         self._stack.setProp(key, val)
 
-    @threaded
+    # @threaded
     def start(self):
         print('inside start begin')
         self._stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
-        self._stack.loop()
+        # TODO: check if it works fine without the following line
+        # self._stack.loop()
 
+@threaded
+def stacksLauncher(profiles_collection, stacks_collection):
+    """Start one stask per whatsapp registered line
+    :param profiles_collection: collection of yowsup profiles
+    :type profiles_collection: collection of yowsup profiles
+    :param stacks_collection: collection of yowsup stacks
+    :type stacks_collection: collection of yowsup stacks
+    """
+    for profile in profiles_collection:
+        stacks_collection[profile] = YowsupDaemonStack(profiles_collection[profile])
+        # stacks_collection[profile]['daemon_thread'] = stacks_collection[profile]['stack'].start()
+        # stacks_collection[profile].broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
+        stacks_collection[profile].start()
 
 def startDaemon():
-    config_manager = ConfigManager()
+    # config_manager = ConfigManager()
+    smsc_requests_handler = SMSCRequestsHandler()
     # TODO: when @pablorsk implements whatsapp in smsc API, get numbers and config from API
     # TODO: add support for multiple numbers (get them from SMSC API)
-    _config_phone = '542604268467'
-    _config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
-    _profile = YowProfile(_config_phone, _config)
+    # _config_phone = '542604268467'
+    # _config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
+    # _profile = YowProfile(_config_phone, _config)
     # NOTE: do not remove following line with no reason (tgalal added it to his demos)
     # _layer_network_dispatcher = None
-    stacks_list = []
-    # TODO: get lines from SMSC API
-    lines = ['542604268467']
+    stacks_collection = {}
 
     try:
-        smsc_requests_handler = SMSCRequestsHandler()
-        stack = YowsupDaemonStack(_profile)
+        profiles_collection = smsc_requests_handler.getLinesCollection()
+        # for profile in profile_collection:
+        #     stacks_collection[profile]['stack'] = YowsupDaemonStack(profile_collection[profile])
+        #     stacks_collection[profile]['daemon_thread'] = threading.Thread(target=stacks_collection[profile]['stack'].start)
+        # for stack in stacks_collection:
+        # whatsapp_daemon_thread = threading.Thread(target=stack.start)
+        whatsapp_daemon_thread = threading.Thread(target=stacksLauncher, args=(profiles_collection, stacks_collection))
+        whatsapp_daemon_thread.start()
+
         # NOTE: do not remove following 2 lines with no reason (tgalal addedthem to his demos)
         # if _layer_network_dispatcher is not None:
         #     stack.set_prop(YowNetworkLayer.PROP_DISPATCHER, _layer_network_dispatcher)
@@ -70,8 +90,9 @@ def startDaemon():
         # whatsapp_daemon_thread = threading.Thread(target=stack.start)
         # whatsapp_daemon_thread.start()
 
-        # print(whatsapp_daemon_thread.is_alive())
+        print(whatsapp_daemon_thread.is_alive())
         while True:
+            print('inside while loop')
             try:
                 time.sleep(5)
                 if smsc_requests_handler.busy:
@@ -81,23 +102,38 @@ def startDaemon():
                     try:
                         print('Sending messages...')
                         for receipt in unsent_receipts:
-                            # wait a random amount of time between messages to avoid whatsapp blocks
                             # TODO: add country code to numbers resource
                             cc = '549'
                             print('cc', cc)
                             prefijo = receipt.relationships['number']['data'].attributes['prefijo']
                             print('prefijo', prefijo)
-                            fijo = receipt.relationships['number']['data'].attributes['prefijo']
+                            fijo = receipt.relationships['number']['data'].attributes['fijo']
                             print('fijo', fijo)
                             message = receipt.relationships['message']['data'].attributes['text']
-                            stack.whatsapp_daemon_layer.sendTextMessage(
-                                # remove following line and uncomment next
-                                '5492604332205',
-                                # "%s%s%s" %(cc, prefijo, fijo),
+                            # TODO: replace hasrdcoded number for the line that should send the message
+                            line = '542604268467'
+                            stack = stacks_collection[line]
+                            sent_message = stack.whatsapp_daemon_layer.sendTextMessage(
+                                # TODO: remove following line and uncomment next
+                                # '5492604332205',
+                                "%s%s%s" %(cc, prefijo, fijo),
                                 message
                             )
+                            print(sent_message)
+                            if sent_message:
+                                print('Mensaje enviado, actualizando estado en SMSC...')
+                                saved_sent_message = smsc_requests_handler.saveSentReceipt(receipt)
+                                if saved_sent_message:
+                                    print('Succesfully updated receipt and saved recieved message!')
+                                else:
+                                    print('ERROR: could not update receipt and/or save recieved message')
+                            else:
+                                print('No se pudo enviar el mansaje a %s%s%s' %(cc, prefijo, fijo))
+                            # wait a random amount of time between messages to avoid whatsapp blocks
                             time.sleep(randint(4,9))
+
                         smsc_requests_handler.busy = False
+
                     except Exception as e:
                         smsc_requests_handler.busy = False
                         print('ERROR: Failed to send message...')
