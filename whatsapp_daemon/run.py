@@ -104,19 +104,16 @@ def startDaemon():
                         for receipt in unsent_receipts:
                             # TODO: add country code to numbers resource
                             cc = '549'
-                            print('cc', cc)
                             prefijo = receipt.relationships['number']['data'].attributes['prefijo']
-                            print('prefijo', prefijo)
                             fijo = receipt.relationships['number']['data'].attributes['fijo']
-                            print('fijo', fijo)
                             message = receipt.relationships['message']['data'].attributes['text']
                             # TODO: replace hasrdcoded number for the line that should send the message
                             line = '542604268467'
                             stack = stacks_collection[line]
                             sent_message = stack.whatsapp_daemon_layer.sendTextMessage(
                                 # TODO: remove following line and uncomment next
-                                # '5492604332205',
-                                "%s%s%s" %(cc, prefijo, fijo),
+                                '5492604332205',
+                                # "%s%s%s" %(cc, prefijo, fijo),
                                 message
                             )
                             print(sent_message)

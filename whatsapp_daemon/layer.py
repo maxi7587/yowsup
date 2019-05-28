@@ -69,7 +69,8 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
-        print('inside onReceipt method')
+        # TODO: use this method to check if messages were recieved and save to API
+        print('inside onReceipt method', entity.__dict__)
         self.toLower(entity.ack())
 
     # NOTE: following method is just to check ECHO works
