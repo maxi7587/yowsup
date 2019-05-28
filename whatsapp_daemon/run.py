@@ -48,7 +48,7 @@ class YowsupDaemonStack(object):
 
 @threaded
 def stacksLauncher(profiles_collection, stacks_collection):
-    """Start one stask per whatsapp registered line
+    """Start one stack per whatsapp registered line
     :param profiles_collection: collection of yowsup profiles
     :type profiles_collection: collection of yowsup profiles
     :param stacks_collection: collection of yowsup stacks
