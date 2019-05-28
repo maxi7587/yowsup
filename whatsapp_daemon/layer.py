@@ -40,16 +40,16 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
             stack = self.getStack()
             profile = stack.getProp('profile')
             username = profile.username
-            smsc_message = SMSCMessage(
-                message_from,
-                username,
-                message_body,
-                message_time,
-                'recieved',
-                ''
-            )
+            # smsc_message = SMSCMessage(
+            #     message_from,
+            #     username,
+            #     message_body,
+            #     message_time,
+            #     'recieved',
+            #     ''
+            # )
 
-            print('smsc_message ---> ', smsc_message.__dict__)
+            # print('smsc_message ---> ', smsc_message.__dict__)
             # TODO: when @pablorsk implements whatsapp in smsc API, instantiate SMSCRequestsHandler and save sent messages
 
         elif messageProtocolEntity.getType() == 'media':

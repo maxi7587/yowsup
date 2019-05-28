@@ -1,4 +1,4 @@
 {
-    "api_url": "https://www.smsc.com.ar",
+    "api_url": "https://api.smsc.com.ar/v1",
     "token": "some token"
 }

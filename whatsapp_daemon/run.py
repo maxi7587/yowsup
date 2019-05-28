@@ -7,6 +7,8 @@ from yowsup.profile.profile import YowProfile
 import sys
 import json
 import threading
+import time
+import whatsapp_daemon.smsc
 
 
 # NOTE: decorator used to thread methods
@@ -54,20 +56,24 @@ def startDaemon():
     # _layer_network_dispatcher = None
 
     try:
+        smsc_requsts_handler = whatsapp_daemon.smsc.SMSCRequestsHandler()
         stack = YowsupDaemonStack(_profile)
         # NOTE: do not remove following 2 lines with no reason (tgalal addedthem to his demos)
         # if _layer_network_dispatcher is not None:
         #     stack.set_prop(YowNetworkLayer.PROP_DISPATCHER, _layer_network_dispatcher)
-        whatsapp_daemon_thread = threading.Thread(target=stack.start)
-        whatsapp_daemon_thread.start()
 
-        print(whatsapp_daemon_thread.is_alive())
+        # TODO: UNCOMMENT folowing three lines
+        # whatsapp_daemon_thread = threading.Thread(target=stack.start)
+        # whatsapp_daemon_thread.start()
+
+        # print(whatsapp_daemon_thread.is_alive())
         while True:
             try:
-                import time
-                time.sleep(3)
+                time.sleep(10)
+                smsc_requests_handler.getUnsentReceipts()
                 # TODO: when @pablorsk implements whatsapp in smsc API, use this loop to instantiate SMSCRequestsHandler and get messages to send from API
-                print(threading.enumerate())
+                # print(threading.enumerate())
+
                 # TODO: remove following line, it's just for testing send method
                 # stack.whatsapp_daemon_layer.sendTextMessage('5492604332205', 'Hola Maxi')
             except IOError:
@@ -79,4 +85,7 @@ def startDaemon():
 
 
 if __name__==  "__main__":
+    reload(whatsapp_daemon.smsc)
+    reload(whatsapp_daemon.smsc.smsc_requests_handler)
+    reload(whatsapp_daemon)
     startDaemon()

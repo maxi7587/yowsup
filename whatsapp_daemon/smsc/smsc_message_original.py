@@ -14,14 +14,16 @@ class SMSCMessage(object):
     :type status_details: str
     """
 
+    attributes = {}
+
     def __init__(self, phone_number_from, phone_number_to, message, timestamp, status, status_details):
         # self.from = phone_number_from
-        self.from_number = phone_number_from
-        self.to_number = phone_number_to
-        self.message = message
-        self.timestamp = timestamp
-        self.status = status
-        self.status_details = status_details
+        self.attributes.from_number = phone_number_from
+        self.attributes.to_number = phone_number_to
+        self.attributes.message = message
+        self.attributes.timestamp = timestamp
+        self.attributes.status = status
+        self.attributes.status_details = status_details
 
     def setFrom(self, phone_number_from):
         """Sets that is sending the message"""
