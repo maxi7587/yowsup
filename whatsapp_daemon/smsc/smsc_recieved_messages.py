@@ -16,4 +16,4 @@ class SMSCRecievedMessage(SMSCClass):
 
     def __init__(self, from_number, text):
         self.attributes['from'] = from_number
-        self.attributes.text = text
+        self.attributes['text'] = text

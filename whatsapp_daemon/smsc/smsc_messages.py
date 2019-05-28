@@ -16,8 +16,9 @@ class SMSCMessage(SMSCClass):
     attributes = {}
     type = 'messages'
 
-    def __init__(self, date, fecha, text, priority):
-        self.attributes.date = date
-        self.attributes.fecha = fecha
-        self.attributes.text = text
-        self.attributes.priority = priority
+    def __init__(self, date, fecha, text, method, priority):
+        self.attributes['date'] = date
+        self.attributes['fecha'] = fecha
+        self.attributes['text'] = text
+        self.attributes['method'] = method
+        self.attributes['priority'] = priority

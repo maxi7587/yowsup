@@ -11,5 +11,5 @@ class SMSCClass(object):
         return self
 
     def addRelationship(self, related_object, type):
-        this.relationships[type] = related_object
+        self.relationships[type]['data'] = related_object
         return self

@@ -8,7 +8,8 @@ import sys
 import json
 import threading
 import time
-import whatsapp_daemon.smsc
+from whatsapp_daemon.smsc import SMSCRequestsHandler
+from random import randint
 
 
 # NOTE: decorator used to thread methods
@@ -48,15 +49,18 @@ class YowsupDaemonStack(object):
 def startDaemon():
     config_manager = ConfigManager()
     # TODO: when @pablorsk implements whatsapp in smsc API, get numbers and config from API
-    # TODO: add support for multiple numbers
+    # TODO: add support for multiple numbers (get them from SMSC API)
     _config_phone = '542604268467'
     _config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
     _profile = YowProfile(_config_phone, _config)
     # NOTE: do not remove following line with no reason (tgalal added it to his demos)
     # _layer_network_dispatcher = None
+    stacks_list = []
+    # TODO: get lines from SMSC API
+    lines = ['542604268467']
 
     try:
-        smsc_requsts_handler = whatsapp_daemon.smsc.SMSCRequestsHandler()
+        smsc_requests_handler = SMSCRequestsHandler()
         stack = YowsupDaemonStack(_profile)
         # NOTE: do not remove following 2 lines with no reason (tgalal addedthem to his demos)
         # if _layer_network_dispatcher is not None:
@@ -69,8 +73,36 @@ def startDaemon():
         # print(whatsapp_daemon_thread.is_alive())
         while True:
             try:
-                time.sleep(10)
-                smsc_requests_handler.getUnsentReceipts()
+                time.sleep(5)
+                if smsc_requests_handler.busy:
+                    print("I'm still sending messges from the last request... wait a minute!")
+                else:
+                    unsent_receipts = smsc_requests_handler.getUnsentReceipts()
+                    try:
+                        print('Sending messages...')
+                        for receipt in unsent_receipts:
+                            # wait a random amount of time between messages to avoid whatsapp blocks
+                            # TODO: add country code to numbers resource
+                            cc = '549'
+                            print('cc', cc)
+                            prefijo = receipt.relationships['number']['data'].attributes['prefijo']
+                            print('prefijo', prefijo)
+                            fijo = receipt.relationships['number']['data'].attributes['prefijo']
+                            print('fijo', fijo)
+                            message = receipt.relationships['message']['data'].attributes['text']
+                            stack.whatsapp_daemon_layer.sendTextMessage(
+                                # remove following line and uncomment next
+                                '5492604332205',
+                                # "%s%s%s" %(cc, prefijo, fijo),
+                                message
+                            )
+                            time.sleep(randint(4,9))
+                        smsc_requests_handler.busy = False
+                    except Exception as e:
+                        smsc_requests_handler.busy = False
+                        print('ERROR: Failed to send message...')
+                        print e
+
                 # TODO: when @pablorsk implements whatsapp in smsc API, use this loop to instantiate SMSCRequestsHandler and get messages to send from API
                 # print(threading.enumerate())
 
@@ -85,7 +117,4 @@ def startDaemon():
 
 
 if __name__==  "__main__":
-    reload(whatsapp_daemon.smsc)
-    reload(whatsapp_daemon.smsc.smsc_requests_handler)
-    reload(whatsapp_daemon)
     startDaemon()
