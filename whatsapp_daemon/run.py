@@ -64,7 +64,7 @@ def startDaemon():
     # config_manager = ConfigManager()
     smsc_requests_handler = SMSCRequestsHandler()
     # TODO: when @pablorsk implements whatsapp in smsc API, get numbers and config from API
-    # TODO: add support for multiple numbers (get them from SMSC API)
+    # TODO: get numbers and config from SMSC API)
     # _config_phone = '542604268467'
     # _config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
     # _profile = YowProfile(_config_phone, _config)
