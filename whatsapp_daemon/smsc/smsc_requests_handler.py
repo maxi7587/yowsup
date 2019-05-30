@@ -2,7 +2,7 @@ import requests
 import json
 import datetime
 import time
-from whatsapp_daemon.smsc import SMSCReceipt, SMSCNumber, SMSCMessage, SMSCRecievedMessage
+from whatsapp_daemon.smsc import SMSCReceipt, SMSCNumber, SMSCMessage, SMSCReceivedMessage
 from yowsup.config.manager import ConfigManager
 from yowsup.profile.profile import YowProfile
 
@@ -86,8 +86,15 @@ class SMSCRequestsHandler(object):
             success = True
             receipt.attributes['enviado'] = 20
             sent_receipt_url = self.api_url + "/receipts?internal_key=%s" %(str(self.internal_key))
-            raw_sent_receipt = requests.patch(sent_receipt_url, receipt.__dict__, headers=self.headers)
+            print('-----------receipt.__dict__---------')
+            print(receipt.toServer())
+            print('--------------------------')
+            raw_sent_receipt = requests.patch(sent_receipt_url, receipt.toServer(), headers=self.headers)
             print(raw_sent_receipt.status_code)
+            sent_receipt_response = raw_sent_receipt.json()
+            print('-----------sent_receipt_response-------------')
+            print(sent_receipt_response)
+            print('---------------------------------------------')
             if raw_sent_receipt.status_code == 200:
                 print('Updated sent receipt in SMSC!')
             else:
@@ -100,15 +107,15 @@ class SMSCRequestsHandler(object):
             fijo = receipt.relationships['number']['data'].attributes['fijo']
             phone_number = "%s%s" %(prefijo, fijo)
             message = receipt.relationships['message']['data'].attributes['text']
-            recieved_message = SMSCRecievedMessage(phone_number, message)
-            recieved_message_url = self.api_url + "/received_messages?internal_key=%s" %(str(self.internal_key))
-            raw_recieved_message = requests.post(recieved_message_url, recieved_message.__dict__, headers=self.headers)
-            print(raw_recieved_message.status_code)
-            if raw_recieved_message.status_code == 200:
-                print('Saved recieved message in SMSC!')
+            received_message = SMSCReceivedMessage(phone_number, message)
+            received_message_url = self.api_url + "/received_messages?internal_key=%s" %(str(self.internal_key))
+            raw_received_message = requests.post(received_message_url, received_message.toServer(), headers=self.headers)
+            print(raw_received_message.status_code)
+            if raw_received_message.status_code == 200:
+                print('Saved received message in SMSC!')
             else:
                 success = False
-                print('ERROR: Failed to save recieved message in SMSC!')
+                print('ERROR: Failed to save received message in SMSC!')
 
         except Exception as e:
             success = False

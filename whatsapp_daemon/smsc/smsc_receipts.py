@@ -18,3 +18,5 @@ class SMSCReceipt(SMSCClass):
     def __init__(self, numero, enviado):
         self.attributes['numero'] = numero
         self.attributes['enviado'] = enviado
+        print(self.attributes['numero'])
+        print(self.attributes['enviado'])

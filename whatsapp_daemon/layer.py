@@ -52,7 +52,7 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
             #     username,
             #     message_body,
             #     message_time,
-            #     'recieved',
+            #     'received',
             #     ''
             # )
 
@@ -69,7 +69,7 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
-        # TODO: use this method to check if messages were recieved and save to API
+        # TODO: use this method to check if messages were received and save to API
         print('inside onReceipt method', entity.__dict__)
         self.toLower(entity.ack())
 
@@ -80,7 +80,7 @@ class WhatsappDaemonLayer(YowInterfaceLayer):
 
     # NOTE: following method is just to check ECHO works
     def onMediaMessage(self, messageProtocolEntity):
-        print('recieved media', messageProtocolEntity.__dict__)
+        print('received media', messageProtocolEntity.__dict__)
         # just print info
         if messageProtocolEntity.media_type == "image":
             print("Echoing image %s to %s" % (messageProtocolEntity.url, messageProtocolEntity.getFrom(False)))

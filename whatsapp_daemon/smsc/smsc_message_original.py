@@ -8,7 +8,7 @@ class SMSCMessage(object):
     :type messge: str
     :timestamp: tiemstamp of the last status update
     :type timestamp: number
-    :status: message status ('sent', 'unsent', 'failed', 'recieved')
+    :status: message status ('sent', 'unsent', 'failed', 'received')
     :type status: str
     :status_details: used to store details regarding the message's status
     :type status_details: str
@@ -43,7 +43,7 @@ class SMSCMessage(object):
         self.timestamp = timestamp
 
     def setStatus(self, status):
-        """Sets the status of the message ('sent', 'unsent', 'falied', 'recieved')"""
+        """Sets the status of the message ('sent', 'unsent', 'falied', 'received')"""
         self.status = status
 
     def setStatusDetails(self, status_details):

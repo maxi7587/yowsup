@@ -102,12 +102,15 @@ def startDaemon():
                     try:
                         print('Sending messages...')
                         for receipt in unsent_receipts:
+                            print('----------receipt-----------')
+                            print(receipt.toServer())
+                            print('----------------------------')
                             # TODO: add country code to numbers resource
                             cc = '549'
                             prefijo = receipt.relationships['number']['data'].attributes['prefijo']
                             fijo = receipt.relationships['number']['data'].attributes['fijo']
                             message = receipt.relationships['message']['data'].attributes['text']
-                            # TODO: replace hasrdcoded number for the line that should send the message
+                            # TODO: replace hardcoded number for the line that should send the message
                             line = '542604268467'
                             stack = stacks_collection[line]
                             sent_message = stack.whatsapp_daemon_layer.sendTextMessage(
@@ -121,9 +124,9 @@ def startDaemon():
                                 print('Mensaje enviado, actualizando estado en SMSC...')
                                 saved_sent_message = smsc_requests_handler.saveSentReceipt(receipt)
                                 if saved_sent_message:
-                                    print('Succesfully updated receipt and saved recieved message!')
+                                    print('Succesfully updated receipt and saved received message!')
                                 else:
-                                    print('ERROR: could not update receipt and/or save recieved message')
+                                    print('ERROR: could not update receipt and/or save received message')
                             else:
                                 print('No se pudo enviar el mansaje a %s%s%s' %(cc, prefijo, fijo))
                             # wait a random amount of time between messages to avoid whatsapp blocks

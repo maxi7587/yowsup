@@ -1,6 +1,6 @@
 from whatsapp_daemon.smsc.smsc_class import SMSCClass
 from whatsapp_daemon.smsc.smsc_messages import SMSCMessage
-from whatsapp_daemon.smsc.smsc_recieved_messages import SMSCRecievedMessage
+from whatsapp_daemon.smsc.smsc_received_messages import SMSCReceivedMessage
 from whatsapp_daemon.smsc.smsc_receipts import SMSCReceipt
 from whatsapp_daemon.smsc.smsc_numbers import SMSCNumber
 from whatsapp_daemon.smsc.smsc_requests_handler import SMSCRequestsHandler

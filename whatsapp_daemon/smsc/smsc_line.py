@@ -1,7 +1,7 @@
 from whatsapp_daemon.smsc import SMSCClass
 
 
-class SMSCRecievedMessages(SMSCClass):
+class SMSCReceivedMessages(SMSCClass):
     """SMSC Receipt implementation.
     :param from: the number that sent the message
     :type from: number

@@ -13,3 +13,17 @@ class SMSCClass(object):
     def addRelationship(self, related_object, type):
         self.relationships[type]['data'] = related_object
         return self
+
+    def toServer(self):
+        return {
+            'id': self.id,
+            'attributes': self.attributes,
+            'relationships': self.formatRelationshipsToServer()
+        }
+
+    def formatRelationshipsToServer(self):
+        relationships = {}
+        for rel in self.relationships:
+            print(rel)
+            relationships[rel] = {'data': self.relationships[rel]['data'].toServer()}
+        return relationships
