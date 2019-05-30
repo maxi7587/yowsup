@@ -85,13 +85,11 @@ class SMSCRequestsHandler(object):
         try:
             success = True
             receipt.attributes['enviado'] = 20
-            sent_receipt_url = self.api_url + "/receipts?internal_key=%s" %(str(self.internal_key))
-            print('-----------receipt.__dict__---------')
-            print(receipt.toServer())
-            print('--------------------------')
-            raw_sent_receipt = requests.patch(sent_receipt_url, receipt.toServer(), headers=self.headers)
+            sent_receipt_url = self.api_url + "/receipts/%s?internal_key=%s" %(str(receipt.id), str(self.internal_key))
+            receipt_json = json.dumps({'data': receipt.toServer()})
+            raw_sent_receipt = requests.patch(sent_receipt_url, receipt_json, headers=self.headers)
             print(raw_sent_receipt.status_code)
-            sent_receipt_response = raw_sent_receipt.json()
+            sent_receipt_response = raw_sent_receipt.content
             print('-----------sent_receipt_response-------------')
             print(sent_receipt_response)
             print('---------------------------------------------')
@@ -108,8 +106,9 @@ class SMSCRequestsHandler(object):
             phone_number = "%s%s" %(prefijo, fijo)
             message = receipt.relationships['message']['data'].attributes['text']
             received_message = SMSCReceivedMessage(phone_number, message)
+            received_message_json = json.dumps({'data': received_message.toServer()})
             received_message_url = self.api_url + "/received_messages?internal_key=%s" %(str(self.internal_key))
-            raw_received_message = requests.post(received_message_url, received_message.toServer(), headers=self.headers)
+            raw_received_message = requests.post(received_message_url, received_message_json, headers=self.headers)
             print(raw_received_message.status_code)
             if raw_received_message.status_code == 200:
                 print('Saved received message in SMSC!')

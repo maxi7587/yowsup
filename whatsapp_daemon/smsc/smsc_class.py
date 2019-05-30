@@ -17,6 +17,7 @@ class SMSCClass(object):
     def toServer(self):
         return {
             'id': self.id,
+            'type': self.type,
             'attributes': self.attributes,
             'relationships': self.formatRelationshipsToServer()
         }
