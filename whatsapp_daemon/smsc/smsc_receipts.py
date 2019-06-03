@@ -9,14 +9,15 @@ class SMSCReceipt(SMSCClass):
     :type enviado: number
     """
 
-    relationships = {
-        'message': {},
-        'number': {}
-    }
     type = 'receipts'
 
     def __init__(self, numero, enviado):
+        SMSCClass.__init__(self)
         self.attributes['numero'] = numero
         self.attributes['enviado'] = enviado
         print(self.attributes['numero'])
         print(self.attributes['enviado'])
+        self.relationships = {
+            'message': {},
+            'number': {}
+        }

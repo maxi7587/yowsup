@@ -10,15 +10,18 @@ class SMSCReceivedMessage(SMSCClass):
     """
 
     # TODO: remove hardcoded relationship when bask end supports lines
-    relationships = {
-        'line': {
-            'type': 'lines',
-            'id': '1'
-        }
-    }
+
     type = 'received_messages'
 
     # TODO: from is really to... tawk with @pablorsk
     def __init__(self, from_number, text):
+        SMSCClass.__init__(self)
         self.attributes['from'] = from_number
         self.attributes['text'] = text
+        # TODO: complete this code...
+        self.relationships = {
+            'line': {
+                'type': 'lines',
+                'id': '1'
+            }
+        }

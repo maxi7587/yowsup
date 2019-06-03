@@ -96,7 +96,7 @@ def startDaemon():
             try:
                 time.sleep(5)
                 if smsc_requests_handler.busy:
-                    print("I'm still sending messges from the last request... wait a minute!")
+                    print("I'm still sending messages from the last request... wait a minute!")
                 else:
                     unsent_receipts = smsc_requests_handler.getUnsentReceipts()
                     try:

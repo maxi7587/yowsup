@@ -2,7 +2,7 @@ import requests
 import json
 import datetime
 import time
-from whatsapp_daemon.smsc import SMSCReceipt, SMSCNumber, SMSCMessage, SMSCReceivedMessage
+from whatsapp_daemon.smsc import SMSCReceipt, SMSCNumber, SMSCMessage, SMSCReceivedMessage, SMSCLine
 from yowsup.config.manager import ConfigManager
 from yowsup.profile.profile import YowProfile
 
@@ -29,6 +29,7 @@ class SMSCRequestsHandler(object):
             formatted_date = date.strftime("%Y/%m/%d")
             print(formatted_date, 'formatted_date')
             url = self.api_url + "/receipts?include=message,number&filter[enviado]=0&filter[message.method]=whatsapp&filter[message.fecha][until]=%s&internal_key=%s" %(str(formatted_date), str(self.internal_key))
+            print('will GET receipts from URL: ', url)
             raw_messages = requests.get(url, headers=self.headers)
             messages_json = raw_messages.json()
             print('Request made. The response is:\n')
@@ -49,24 +50,36 @@ class SMSCRequestsHandler(object):
             # Extract includes
             for include in messages_json['included']:
                 # Format numbers
+                print('include --->', include)
                 if include['type'] == 'numbers':
                     smsc_number = SMSCNumber(**include['attributes'])
                     smsc_number.id = include['id']
                     numbers_dict[smsc_number.id] = smsc_number
+                    print('number attributes --->', smsc_number.attributes)
                 # Format messages
                 if include['type'] == 'messages':
                     smsc_message = SMSCMessage(**include['attributes'])
                     smsc_message.id = include['id']
                     messages_dict[smsc_message.id] = smsc_message
+                # Format lines
+                if include['type'] == 'lines':
+                    smsc_line = SMSCLine(**include['attributes'])
+                    smsc_line.id = include['id']
+                    lines_dict[smsc_line.id] = smsc_line
 
             # Extract receipts
             for receipt in messages_json['data']:
+                if receipt['attributes']['enviado'] == 20:
+                    continue
                 # Format receipts
                 smsc_receipt = SMSCReceipt(**receipt['attributes'])
                 smsc_receipt.id = receipt['id']
                 smsc_receipt.addRelationship(numbers_dict[receipt['relationships']['number']['data']['id']], 'number')
                 smsc_receipt.addRelationship(messages_dict[receipt['relationships']['message']['data']['id']], 'message')
                 receipts_list.append(smsc_receipt)
+
+            if len(receipts_list) == 0:
+                print('No new messages to send.')
 
             return receipts_list
 
@@ -124,17 +137,40 @@ class SMSCRequestsHandler(object):
         return success
         # TODO: return confiramtion code of the request status and add to method documentation
 
-    def getNumberConfig(self, number):
-        # TODO: check the posiibility to store axolotl.db file in a server to avoid "IcorrectMessage or KeyId ERROR in Yowsup" when using in other PC
-        url = self.api_url + "/whatsapp/%s/config" %(str(phone_number))
-        raw_config = requests.get(url, headers=self.headers)
-        config_json = raw_config.json()
-        print('config_json: ', config_json)
-        # TODO: return configuration for the passed number and add to method documentation
-
     def getLinesCollection(self):
         config_manager = ConfigManager()
-        # TODO: get lines from SMSC API
+
+        # Get lines from SMSC API
+        lines_url = self.api_url + "/lines?include=number&internal_key=%s" %(str(self.internal_key))
+        raw_lines = requests.get(lines_url, headers=self.headers)
+        lines_json = raw_lines.json()
+
+        # instance lines and numbers
+        numbers_dict = {}
+        for include in lines_json['included']:
+            # Format numbers
+            print('include --->', include)
+            if include['type'] == 'numbers':
+                smsc_number = SMSCNumber(**include['attributes'])
+                smsc_number.id = include['id']
+                numbers_dict[smsc_number.id] = smsc_number
+
+        # Extract lines
+        for line in lines_json['data']:
+            # search lines that have whatsapp_config attributes set
+            if line['attributes']['whatsapp_config'] == '':
+                continue
+            smsc_line = SMSCLine(**line['attributes'])
+            smsc_line.id = line['id']
+            smsc_line.addRelationship(numbers_dict[line['relationships']['number']['data']['id']], 'number')
+            phone_number = '549' + smsc_line.relationships['number'].attributes['prefijo'] + smsc_line.relationships['number'].attributes['fijo']
+            config_file_path = 'whatsapp_daemon/config/' + phone_number + '.json'
+            with open(config_file_path, 'w+') as config_file:
+                config_file.write(line['whatsapp_config'])
+            config = config_manager.load_path(config_file_path)
+            profiles_collection[phone_number] = YowProfile(phone_number, config)
+
+        # TODO: following 4 lines are for testing with personal number (comment or remove them)
         phone_number = '542604268467'
         config = config_manager.load_path('whatsapp_daemon/config/542604268467.json')
         profiles_collection = {}
