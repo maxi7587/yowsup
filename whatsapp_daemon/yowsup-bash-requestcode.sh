@@ -37,3 +37,8 @@ echo -n "Enter the verification code: "
 read verification_code
 
 yowsup-cli registration --register $verification_code --config-phone $phone_number
+
+echo "Now, copy this configuration object in SMSC:"
+echo ""
+cat ~/.config/yowsup/$phone_number/config.json
+echo ""
