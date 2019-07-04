@@ -30,10 +30,11 @@ class SMSCRequestsHandler(object):
             date = datetime.now(pytz.utc)
             formatted_date = date.strftime("%Y-%m-%dT%H:%M:%S%z")
 
-            ## change, by pablorsk, read please
-            formatted_date = urllib.quote_plus(formatted_date) # by pablorsk
-            ##>>> f = { 'eventName' : 'myEvent', 'eventDescription' : 'cool event'}
-            ## >>> urllib.urlencode(f)
+            ## pablorsk note: temporal fix
+            formatted_date = urllib.quote_plus(formatted_date)
+            ## on future use this?
+            ## f = { 'eventName' : 'myEvent', 'eventDescription' : 'cool event'}
+            ## urllib.urlencode(f)
             ## 'eventName=myEvent&eventDescription=cool+event'
 
             url = self.api_url + "/receipts?include=message,number,line&filter[enviado][lt]=5&filter[message.method]=whatsapp&filter[message.fecha][until]=%s&internal_key=%s" %(str(formatted_date), str(self.internal_key))
