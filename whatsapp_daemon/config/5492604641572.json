@@ -1,0 +1,15 @@
+{
+    "__version__": 1,
+    "cc": "54",
+    "client_static_keypair": "0MLUaKiAq0TgNICuVzo3ACVCu2fMyeMRV1BR0qvmTELRQK87dIu4FNkCN6Pr0tFlmKNo4upPmM8zMxFW7WvxRA==",
+    "edge_routing_info": "CAUIAg==",
+    "expid": "Bt2Pj4DQTVulwn7WoZd5vA==",
+    "fdid": "9cfb71d8-6bdb-4aae-957c-b37b20e16079",
+    "id": "vfJgdxGjZomyd4ZDoAzO9vQTUXI=",
+    "login": "5492604641572",
+    "mcc": "722",
+    "mnc": "010",
+    "phone": "5492604641572",
+    "sim_mcc": "000",
+    "sim_mnc": "000"
+}

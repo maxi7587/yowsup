@@ -28,6 +28,9 @@ class SMSCClass(object):
         relationships = {}
         for rel in self.relationships:
             print(rel)
+            # NOTE: if the relatinship is empty, skip it and continue with the next relationships
+            if self.relationships[rel] == {}:
+                continue
             relationships[rel] = {'data': self.relationships[rel]['data'].toServer()}
             # fix because toServer method is assigning parent attributes
             print(relationships[rel])

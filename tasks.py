@@ -7,4 +7,5 @@ def requestcode():
 
 @task
 def whatsapp_daemon():
-    os.system('python ./whatsapp_daemon/run.py')
+    os.system('./whatsapp_daemon/run-once-each-hour.sh')
+    # os.system('python ./whatsapp_daemon/run.py')

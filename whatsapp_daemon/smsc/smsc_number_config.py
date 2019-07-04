@@ -26,7 +26,7 @@ class SMSCNumberConfig(object):
     :type login: string
     """
 
-    def __init__( self, cc, client_static_keypair, expid, fdid, id, mcc, mnc, phone, server_static_public, sim_mcc, sim_mnc, login):
+    def __init__( self, cc, client_static_keypair, expid, fdid, id, mcc, mnc, phone, server_static_public, sim_mcc, sim_mnc, login, **kwargs):
         # self.from = phone_number_from
         self.__version__ = 1
         self.cc = cc

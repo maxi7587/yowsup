@@ -11,13 +11,12 @@ class SMSCReceipt(SMSCClass):
 
     type = 'receipts'
 
-    def __init__(self, numero, enviado):
+    def __init__(self, numero, enviado, **kwargs):
         SMSCClass.__init__(self)
         self.attributes['numero'] = numero
         self.attributes['enviado'] = enviado
-        print(self.attributes['numero'])
-        print(self.attributes['enviado'])
         self.relationships = {
             'message': {},
-            'number': {}
+            'number': {},
+            'line': {}
         }

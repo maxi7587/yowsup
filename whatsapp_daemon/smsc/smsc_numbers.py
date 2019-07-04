@@ -11,8 +11,7 @@ class SMSCNumber(SMSCClass):
 
     type = 'numbers'
 
-    def __init__(self, prefijo, fijo):
+    def __init__(self, prefijo, fijo, **kwargs):
         SMSCClass.__init__(self)
-        print('attributes i number class', self.attributes)
         self.attributes['prefijo'] = prefijo
         self.attributes['fijo'] = fijo

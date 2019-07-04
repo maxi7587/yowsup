@@ -11,7 +11,7 @@ class SMSCLine(SMSCClass):
 
     type = 'lines'
 
-    def __init__(self, numero, whatsapp_config):
+    def __init__(self, numero, whatsapp_config, **kwargs):
         SMSCClass.__init__(self)
         self.attributes['numero'] = numero
         self.attributes['whatsapp_config'] = whatsapp_config

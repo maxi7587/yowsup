@@ -4,10 +4,11 @@ import logging
 import socket
 import traceback
 
+
 logger = logging.getLogger(__name__)
 
 
-class AsyncoreConnectionDispatcher(YowConnectionDispatcher, asyncore.dispatcher_with_send):
+class CustomAsyncoreConnectionDispatcher(YowConnectionDispatcher, asyncore.dispatcher_with_send):
     def __init__(self, connectionCallbacks):
         super(AsyncoreConnectionDispatcher, self).__init__(connectionCallbacks)
         asyncore.dispatcher_with_send.__init__(self)
@@ -25,18 +26,8 @@ class AsyncoreConnectionDispatcher(YowConnectionDispatcher, asyncore.dispatcher_
         self.connectionCallbacks.onConnecting()
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         asyncore.dispatcher_with_send.connect(self, host)
-        print('---------------------------------------')
-        print('---------------------------------------')
-        print('going to call asyncore.loop')
-        print('---------------------------------------')
-        print('---------------------------------------')
+        pritn('WONT CALL ASYNCORE LOOP')
         # asyncore.loop(timeout=1)
-        print('---------------------------------------')
-        print('---------------------------------------')
-        print('CALLED asyncore.loop')
-        print('---------------------------------------')
-        print('---------------------------------------')
-
 
     def handle_connect(self):
         logger.debug("handle_connect")

@@ -52,6 +52,7 @@ class YowStackBuilder(object):
     def pushDefaultLayers(self):
         defaultLayers = YowStackBuilder.getDefaultLayers()
         self.layers += defaultLayers
+        print('PUSH DEFAULT LAYERS SELF --->', self.layers)
         return self
 
     def push(self, yowLayer):
@@ -69,6 +70,8 @@ class YowStackBuilder(object):
     def getDefaultLayers(groups = True, media = True, privacy = True, profiles = True):
         coreLayers = YowStackBuilder.getCoreLayers()
         protocolLayers = YowStackBuilder.getProtocolLayers(groups = groups, media=media, privacy=privacy, profiles=profiles)
+
+        print('protocolLayers ------------>', protocolLayers)
 
         allLayers = coreLayers
         allLayers += (AxolotlControlLayer,)

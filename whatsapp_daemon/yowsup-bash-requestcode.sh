@@ -3,27 +3,12 @@
 # Should run the following line (using example data):
 # python yowsup-cli registration --requestcode sms --config-phone 46766921516 --config-cc 46 --config-mcc 240 --config-mnc 01
 
-phone_number=542604268467
-cc_number=54
-mcc_number=722
-mnc_number=320
+export PYTHONPATH=`pwd`
 
-read -p "Enter your number (leave blank to use stored default value): " new_phone_number
-
-test "$new_phone_number" == ""
-
-echo $?
-
-if $?
-then
-    phone_number=new_phone_number
-    read -p "Enter your CC (CountyCode) number (leave blank to use stored
-    default value): " cc_number
-    read -p "Enter your MCC (MobileCountyCode) number (leave blank to use stored
-    default value): " mcc_number
-    read -p "Enter your MNC (MobileNetworkCode) number (leave blank to use
-    stored default value): " mnc_number
-fi
+read -p "Enter your number (leave blank to use stored default value): " phone_number
+read -p "Enter your CC (CountyCode) number (leave blank to use stored default value): " cc_number
+read -p "Enter your MCC (MobileCountyCode) number (leave blank to use stored default value): " mcc_number
+read -p "Enter your MNC (MobileNetworkCode) number (leave blank to use stored default value): " mnc_number
 
 echo "Will request a verification code with the following data:"
 echo "- cc $cc_number"

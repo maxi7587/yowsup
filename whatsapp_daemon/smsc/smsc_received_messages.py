@@ -14,14 +14,12 @@ class SMSCReceivedMessage(SMSCClass):
     type = 'received_messages'
 
     # TODO: from is really to... tawk with @pablorsk
-    def __init__(self, from_number, text):
+    def __init__(self, from_number, text, **kwargs):
         SMSCClass.__init__(self)
         self.attributes['from'] = from_number
         self.attributes['text'] = text
+        self.attributes['method'] = 'whatsapp'
         # TODO: complete this code...
         self.relationships = {
-            'line': {
-                'type': 'lines',
-                'id': '1'
-            }
+            'line': {}
         }
